@@ -1,424 +1,217 @@
-'''print("keyword1:")
-keyword1 = input()
-print("keyword2:")
-keyword2 = input()'''
 import re
 
-#keyword_list_test = ['gupp(ies|happy)', 'guppitonia', 'gupppiop']
-keyword_list_test = ['gupp(ies|happy)', 'gupp(itonia)', 'gupp(piop)']
+
+def _remove_duplicates(lst):
+    return list({item for item in lst if item is not None})
 
 
+def _alphabetize(lst):
+    return sorted(lst, key=str)
 
-#print(f'key1: {keyword1}\nkey2: {keyword2}\nkey3: {keyword3}')
 
-def sort_by_length(strings):
-    return sorted(strings, key=len)
-
-def remove_redundancies_and_none(input_list):
-    # Create a set to store unique elements
-    unique_elements = set()
-    # Iterate through the list and add non-None elements to the set
-    for item in input_list:
-        if item is not None:
-            unique_elements.add(item)
-    # Convert the set back to a list
-    return list(unique_elements)
-
-def alphabetize_list(input_list):
-    # Use sorted() to sort the list
-    return sorted(input_list, key=str)
-
-def pair_matcher_util(input, input2):
-    for i in range(len(max(input,input2))):
+def _pair_merge(a, b):
+    """Merge two plain strings into a regex alternation on their common prefix."""
+    for i in range(len(max(a, b))):
         try:
-            if input[i] != input2[i]:
-
-                return f'{input[:i]}({input[i:]}|{input2[i:]})'
-
+            if a[i] != b[i]:
+                return f'{a[:i]}({a[i:]}|{b[i:]})'
         except IndexError:
-            a = f'{input[i:]}{input2[i:]}'
-            if len(a) == 1:
-                return f'{input[:i]}{a}?'
-            return f'{input[:i]}({a})?'
-
-    return None
-
-def find_prefix(input, input2):
-    i_remember = 0
-    for i in range(len(max(input, input2))):
-        prefix = input[:i]
-
-        if re.search(r'\(.*\)', input):
-            if i == re.search(r'\(.*\)', input).span()[0]:
-                break
-        if re.search(r'\(.*\)', input2):
-            if i == re.search(r'\(.*\)', input2).span()[0]:
-                break
-        try:
-            if input[i] != input2[i]:
-                break
-                # return f'{input[:i]}({input[i:]}|{input2[i:]})'
-
-        except IndexError:
-            break
-            '''a = f'{input[i:]}{input2[i:]}'
-            if len(a) == 1:
-                return f'{input[:i]}{a}?'
-            return f'{input[:i]}({a})?'''''
-        i_remember = i
-    return i_remember
-
-def find_parts(input, input2):
-    # input not input2 must be the one pre-processed
-    input_match = re.search(r'.*\(.*\)\?$', input)  # if the regex ends with '(smth)?'
-    input_match1 = re.search(r'.*\(.*|.*\)$', input)  # if the regex ends with '(smth|smth)'
-    input_match2 = re.search(r'.*[^/\\/]\?$', input)  # if the regex ends with '?' but not '\?'
-
-    input2_match = re.search(r'.*\(.*\)\?$', input2)  # if the regex ends with '(smth)?'
-    input2_match1 = re.search(r'.*\(.*|.*\)$', input2)  # if the regex ends with '(smth|smth)'
-    input2_match2 = re.search(r'.*[^/\\/]\?$', input2)  # if the regex ends with '?' but not '\?'
-
-    if not input_match and not input_match1 and not input_match2 and not input2_match and not input2_match1 and not input2_match2:  # if no regex shit detected
-        return (pair_matcher_util(input, input2))
-
-    if not input_match and not input_match1 and not input_match2:  # if no regex shit in input
-        if input2_match or input2_match1 or not input2_match2:  # if regex shit in input2
-            a = input
-            b = input2
-            input = b
-            input2 = a
-
-            input_match = re.search(r'.*\(.*\)\?$', input)  # if the regex ends with '(smth)?'
-            input_match1 = re.search(r'.*\(.*|.*\)$', input)  # if the regex ends with '(smth|smth)'
-            input_match2 = re.search(r'.*[^/\\/]\?$', input)  # if the regex ends with '?' but not '\?'
-
-            input2_match = re.search(r'.*\(.*\)\?$', input2)  # if the regex ends with '(smth)?'
-            input2_match1 = re.search(r'.*\(.*|.*\)$', input2)  # if the regex ends with '(smth|smth)'
-            input2_match2 = re.search(r'.*[^/\\/]\?$', input2)  # if the regex ends with '?' but not '\?'
-
-    result = None
-
-    parts_list = []
-
-    if input_match or input_match1:
-        if input_match:
-            match = re.search(r'\(.*\)\?$', input)
-        elif input_match1:
-            match = re.search(r'\(.*\)$', input)
-        s = match.group()  # Extract the matched part
-
-        flag = 0
-
-        for i in range(len(s)):
-            if s[i] == r'(' or s[i] == r')' or s[i] == r'|':
-                if i != 0:
-                    if s[i - 1] != '\\':
-                        print(f'append me please !!! {s[flag + 1:i]}')
-                        parts_list.append(s[flag + 1:i])
-                        flag = i  # ahhhh i've been captured
-    elif input_match2:
-        parts_list.append(input[-2])
-
-    if input2_match or input2_match1:
-        if input2_match:
-            match = re.search(r'\(.*\)\?$', input2)
-        elif input2_match1:
-            match = re.search(r'\(.*\)$', input2)
-        s = match.group()  # Extract the matched part
-
-        flag = 0
-
-        for i in range(len(s)):
-            if s[i] == r'(' or s[i] == r')' or s[i] == r'|':
-                if i != 0:
-                    if s[i - 1] != '\\':
-                        # print(f'{s[i - 1]}')
-                        parts_list.append(s[flag + 1:i])
-                        flag = i  # ahhhh i've been captured
-    elif input2_match2:
-        parts_list.append(input2[-2])
-    # print(f'hi input is {input}, {input2}')
-
-
-    print(f'parts list is {parts_list}')
-
-    parts_list = remove_redundancies_and_none(parts_list)
-    parts_list = alphabetize_list(parts_list)
-
-    print(f'parts list is 2{parts_list}')
-    return(parts_list)
-
-def pair_matcher(input, input2):
-    if input == None or input2 == None:
-        return None
-
-    #print(input, input2)
-    if input[0].lower() != input2[0].lower() or input[1] != input2[1] or input[2] != input2[2]:
-        return None
-    
-    # input not input2 must be the one pre-processed
-    input_match = re.search(r'.*\(.*\)\?$', input)  # if the regex ends with '(smth)?'
-    input_match1 = re.search(r'.*\(.*|.*\)$', input)  # if the regex ends with '(smth|smth)'
-    input_match2 = re.search(r'.*[^/\\/]\?$', input)  # if the regex ends with '?' but not '\?'
-
-    input2_match = re.search(r'.*\(.*\)\?$', input2)  # if the regex ends with '(smth)?'
-    input2_match1 = re.search(r'.*\(.*|.*\)$', input2)  # if the regex ends with '(smth|smth)'
-    input2_match2 = re.search(r'.*[^/\\/]\?$', input2)  # if the regex ends with '?' but not '\?'
-
-    if not input_match and not input_match1 and not input_match2 and not input2_match and not input2_match1 and not input2_match2: #if no regex shit detected
-        return(pair_matcher_util(input, input2))
-
-    if not input_match and not input_match1 and not input_match2: #if no regex shit in input
-        if input2_match or input2_match1 or not input2_match2: # if regex shit in input2
-            a = input
-            b = input2
-            input = b
-            input2 = a
-
-            input_match = re.search(r'.*\(.*\)\?$', input)  # if the regex ends with '(smth)?'
-            input_match1 = re.search(r'.*\(.*|.*\)$', input)  # if the regex ends with '(smth|smth)'
-            input_match2 = re.search(r'.*[^/\\/]\?$', input)  # if the regex ends with '?' but not '\?'
-
-            input2_match = re.search(r'.*\(.*\)\?$', input2)  # if the regex ends with '(smth)?'
-            input2_match1 = re.search(r'.*\(.*|.*\)$', input2)  # if the regex ends with '(smth|smth)'
-            input2_match2 = re.search(r'.*[^/\\/]\?$', input2)  # if the regex ends with '?' but not '\?'
-
-    result = None
-
-    print(f'hi im input 1 and 2 : {input, input2}')
-
-    # find prefix
-    i_remember = 0
-    for i in range(len(max(input,input2))):
-        prefix = input[:i]
-
-        if re.search(r'\(.*\)', input):
-            if i == re.search(r'\(.*\)', input).span()[0]:
-                break
-        if re.search(r'\(.*\)', input2):
-            if i == re.search(r'\(.*\)', input2).span()[0]:
-                break
-        try:
-            if input[i] != input2[i]:
-                break
-                #return f'{input[:i]}({input[i:]}|{input2[i:]})'
-
-        except IndexError:
-            break
-            '''a = f'{input[i:]}{input2[i:]}'
-            if len(a) == 1:
-                return f'{input[:i]}{a}?'
-            return f'{input[:i]}({a})?'''''
-        i_remember = i
-
-    #print(f'prefix: {prefix}')
-
-
-    print('hiii')
-
-    if input_match or input_match1 or input_match2:
-        if input2_match or input2_match1 or not input2_match2: #if regex shit in both inputs
-
-            #collect parts list
-            parts_list = []
-
-            if input_match or input_match1:
-                if input_match:
-                    match = re.search(r'\(.*\)\?$', input)
-                elif input_match1:
-                    match = re.search(r'\(.*\)$', input)
-                s = match.group()  # Extract the matched part
-
-                flag = 0
-
-                for i in range(len(s)):
-                    if s[i] == r'(' or s[i] == r')' or s[i] == r'|':
-                        if i != 0:
-                            if s[i - 1] != '\\':
-                                print(f'append me please !!! {s[flag + 1:i]}')
-                                parts_list.append(s[flag + 1:i])
-                                flag = i #ahhhh i've been captured
-            elif input_match2:
-                parts_list.append(input[-2])
-
-            if input2_match or input2_match1:
-                if input2_match:
-                    match = re.search(r'\(.*\)\?$', input2)
-                elif input2_match1:
-                    match = re.search(r'\(.*\)$', input2)
-                s = match.group()  # Extract the matched part
-
-                flag = 0
-
-                for i in range(len(s)):
-                    if s[i] == r'(' or s[i] == r')' or s[i] == r'|':
-                        if i != 0:
-                            if s[i - 1] != '\\':
-                                # print(f'{s[i - 1]}')
-                                parts_list.append(s[flag + 1:i])
-                                flag = i  # ahhhh i've been captured
-            elif input2_match2:
-                parts_list.append(input2[-2])
-            #print(f'hi input is {input}, {input2}')
-
-        print(f'parts list is {parts_list}')
-
-        parts_list = remove_redundancies_and_none(parts_list)
-        parts_list = alphabetize_list(parts_list)
-
-        print(f'parts list is 2{parts_list}')
-
-
-        #organize parts list to output
-        if re.search(r'\(.*\)$', input):
-            j = re.search(r'\(.*\)$', input).span()[0] -1
-
-        elif re.search(r'\(.*\)?$', input):
-            j = re.search(r'\(.*\)?$', input).span()[0] -1
-
-
-        if j != i_remember:
-            parts_list.append(input[i_remember:j])
-
-
-        if re.search(r'\(.*\)$', input2):
-            j = re.search(r'\(.*\)$', input2).span()[0] -1
-
-        elif re.search(r'\(.*\)?$', input2):
-            j = re.search(r'\(.*\)?$', input2).span()[0] -1
-
-        if j != i_remember:
-            parts_list.append(input2[i_remember:j])
-
-
-        r = f'{prefix}('
-        for i in range(len(parts_list)):
-            r = r + parts_list[i]
-            if i != len(parts_list) - 1:
-                r = r + r'|'
-        r = r + r')'
-        if input[-1] == r'?' or input2[-1] == r'?':
-            r = r + r'?'
-
-        print(f'returning parts list is 2{parts_list}')
-        return r
-
-
-
-
-
-    if input_match:
-        x = input[:-2]
-        result = x + f'|{input2[i_remember:]})?'
-    elif input_match1:
-        x = input[:-1]
-        result = x + f'|{input2[i_remember:]})'
-    elif input_match2:
-        x = input[:-1]
-        y = x[-1]
-        x = x[:-1]
-        result = x + f'({y}|{input2[i_remember:]})?'
-
-    print(f'returning {result}')
-
-    return result
-
-
-def first_4_match(input, input2):
-    b = False
-    if len(input) > 4 and len(input2) > 4:
-        if input[0] == input2[0]:
-            b = True
-            for i in range(4):
-                if input[i] != input2[i]:
-                    b = False
-
-    return b
-
-def pair_capitalizator(input, input2):
-    if input == None or input2 == None:
-        return None
-    if input[0].lower() == input2[0] or input[0] == input2[0].lower() and input[1:] == input2[1:]:
-        return f'[{input[0].upper()}{input[0].lower()}]{input[1:]}'
+            suffix = f'{a[i:]}{b[i:]}'
+            if len(suffix) == 1:
+                return f'{a[:i]}{suffix}?'
+            return f'{a[:i]}({suffix})?'
     return None
 
 
-
-def process_keywords(input):
-    #input = sort_by_length(input)
-    keyword_list = input.copy()
-    intermediate_keyword_list = input.copy()
-    #print(f'hi{keyword_list}')
-    #print(intermediate_keyword_list)
-
-    for i in range(len(keyword_list)):
-        #print(f'KW list is : {keyword_list}')
-        for j in range(len(keyword_list)):
-            #print(f'KW list is 22: {keyword_list}')
-
-            if i != j:
-                if keyword_list[i][0].lower() == keyword_list[j][0].lower() and keyword_list[i][1] == keyword_list[j][1] and keyword_list[i][2] == keyword_list[j][2]:
-                    paired = pair_matcher(keyword_list[i], keyword_list[j])
-                    print(f"key1 {keyword_list[i]}, key 2 {keyword_list[j]}")
-                    print(f'paire : {paired}')
-                    #print(f'KW list is 23: {keyword_list}')
-                    if paired != None:
-                        try:
-                            intermediate_keyword_list[i] = None
-                            intermediate_keyword_list[j] = None
-
-                        except IndexError:
-                            pass
-                        #print(f'KW list is 24: {keyword_list}')
-
-                        keyword_list.append(paired)
-
-    print(f'da list is :{keyword_list}')
+def _classify(pattern):
+    """Returns (has_optional_group, has_group, has_single_optional) for a pattern."""
+    opt  = bool(re.search(r'.*\(.*\)\?$', pattern))
+    grp  = bool(re.search(r'.*\(.*|.*\)$', pattern))
+    sing = bool(re.search(r'.*[^/\\/]\?$', pattern))
+    return opt, grp, sing
 
 
-    print(f'ik list is :{intermediate_keyword_list}')
-    intermediate_keyword_list = remove_redundancies_and_none(intermediate_keyword_list)
+def _extract_parts(pattern, has_opt, has_grp, has_sing):
+    """Pull the alternatives out of a pattern's terminal group."""
+    parts = []
+    if has_opt or has_grp:
+        m = re.search(r'\(.*\)\?$' if has_opt else r'\(.*\)$', pattern)
+        s = m.group()
+        flag = 0
+        for i in range(len(s)):
+            if s[i] in ('(', ')', '|') and i != 0 and s[i - 1] != '\\':
+                parts.append(s[flag + 1:i])
+                flag = i
+    elif has_sing:
+        parts.append(pattern[-2])
+    return parts
 
 
+def pair_matcher_util(a, b):
+    return _pair_merge(a, b)
 
 
-
-    final_keyword_list=[]
-    final_keyword_list = intermediate_keyword_list.copy()
-    for i in range(len(intermediate_keyword_list)):
-        for j in range(len(intermediate_keyword_list)):
-            if i != j:
-                capped = pair_capitalizator(intermediate_keyword_list[i], intermediate_keyword_list[j])
-                if capped != None:
-                    final_keyword_list[i] = None
-                    final_keyword_list[j] = None
-                    final_keyword_list.append(paired)
-
-    final_keyword_list = remove_redundancies_and_none(final_keyword_list)
-
-    print(f'processed keywords :{final_keyword_list}')
-    return final_keyword_list
-
-                
-
-    '''if first_4_match(keyword1, keyword2):
-        print('hi')
-        a = pair_matcher_util(keyword1, keyword2)
-        print(a)
-
-    b = pair_matcher(a,keyword3)
-    #print(pair_matcher(b,keyword4))
-
-    print(pair_capitalizator(keyword2, keyword4))'''
+def find_prefix(a, b):
+    last = 0
+    for i in range(len(max(a, b))):
+        if re.search(r'\(.*\)', a) and i == re.search(r'\(.*\)', a).span()[0]:
+            break
+        if re.search(r'\(.*\)', b) and i == re.search(r'\(.*\)', b).span()[0]:
+            break
+        try:
+            if a[i] != b[i]:
+                break
+        except IndexError:
+            break
+        last = i
+    return last
 
 
-    '''input = [keyword3, a]
+def find_parts(a, b):
+    a_opt, a_grp, a_sing = _classify(a)
+    b_opt, b_grp, b_sing = _classify(b)
 
-    if first_4_match(input):
-        print('hi')
-        a = pair_matcher_util(input)
-        print(a)'''
+    if not any([a_opt, a_grp, a_sing, b_opt, b_grp, b_sing]):
+        return _pair_merge(a, b)
 
-class main:
-    print(f'hi im from main: {process_keywords(keyword_list_test)}')
+    if not any([a_opt, a_grp, a_sing]):
+        if any([b_opt, b_grp]) or not b_sing:
+            a, b = b, a
+            a_opt, a_grp, a_sing = _classify(a)
+            b_opt, b_grp, b_sing = _classify(b)
 
+    parts = _extract_parts(a, a_opt, a_grp, a_sing) + _extract_parts(b, b_opt, b_grp, b_sing)
+    return _alphabetize(_remove_duplicates(parts))
+
+
+def pair_matcher(a, b):
+    if a is None or b is None:
+        return None
+    if a[0].lower() != b[0].lower() or a[1] != b[1] or a[2] != b[2]:
+        return None
+
+    a_opt, a_grp, a_sing = _classify(a)
+    b_opt, b_grp, b_sing = _classify(b)
+
+    if not any([a_opt, a_grp, a_sing, b_opt, b_grp, b_sing]):
+        return _pair_merge(a, b)
+
+    if not any([a_opt, a_grp, a_sing]):
+        if any([b_opt, b_grp]) or not b_sing:
+            a, b = b, a
+            a_opt, a_grp, a_sing = _classify(a)
+            b_opt, b_grp, b_sing = _classify(b)
+
+    # scan forward to find where the common prefix ends
+    prefix = ''
+    i_remember = 0
+    for i in range(len(max(a, b))):
+        prefix = a[:i]
+        if re.search(r'\(.*\)', a) and i == re.search(r'\(.*\)', a).span()[0]:
+            break
+        if re.search(r'\(.*\)', b) and i == re.search(r'\(.*\)', b).span()[0]:
+            break
+        try:
+            if a[i] != b[i]:
+                break
+        except IndexError:
+            break
+        i_remember = i
+
+    if a_opt or a_grp or a_sing:
+        if b_opt or b_grp or not b_sing:
+            parts = _extract_parts(a, a_opt, a_grp, a_sing) + _extract_parts(b, b_opt, b_grp, b_sing)
+            parts = _alphabetize(_remove_duplicates(parts))
+
+            if re.search(r'\(.*\)$', a):
+                j = re.search(r'\(.*\)$', a).span()[0] - 1
+            elif re.search(r'\(.*\)?$', a):
+                j = re.search(r'\(.*\)?$', a).span()[0] - 1
+            else:
+                j = i_remember
+
+            if j != i_remember:
+                parts.append(a[i_remember:j])
+
+            if re.search(r'\(.*\)$', b):
+                j = re.search(r'\(.*\)$', b).span()[0] - 1
+            elif re.search(r'\(.*\)?$', b):
+                j = re.search(r'\(.*\)?$', b).span()[0] - 1
+            else:
+                j = i_remember
+
+            if j != i_remember:
+                parts.append(b[i_remember:j])
+
+            result = prefix + '(' + '|'.join(parts) + ')'
+            if a[-1] == '?' or b[-1] == '?':
+                result += '?'
+            return result
+
+    if a_opt:
+        return a[:-2] + f'|{b[i_remember:]})?'
+    elif a_grp:
+        return a[:-1] + f'|{b[i_remember:]})'
+    elif a_sing:
+        stem = a[:-1]
+        last_char = stem[-1]
+        stem = stem[:-1]
+        return stem + f'({last_char}|{b[i_remember:]})?'
+
+    return None
+
+
+def first_4_match(a, b):
+    if len(a) <= 4 or len(b) <= 4:
+        return False
+    return all(a[i] == b[i] for i in range(4))
+
+
+def pair_capitalizator(a, b):
+    if a is None or b is None:
+        return None
+    if (a[0].lower() == b[0] or a[0] == b[0].lower()) and a[1:] == b[1:]:
+        return f'[{a[0].upper()}{a[0].lower()}]{a[1:]}'
+    return None
+
+
+def process_keywords(keyword_list):
+    kw = keyword_list.copy()
+    orig_len = len(keyword_list)
+
+    # null out consumed entries in-place so appended merges end up in the result
+    for i in range(orig_len):
+        for j in range(orig_len):
+            if i == j or kw[i] is None or kw[j] is None:
+                continue
+            if len(kw[i]) < 3 or len(kw[j]) < 3:
+                continue
+            if (kw[i][0].lower() == kw[j][0].lower()
+                    and kw[i][1] == kw[j][1]
+                    and kw[i][2] == kw[j][2]):
+                paired = pair_matcher(kw[i], kw[j])
+                if paired is not None:
+                    kw[i] = None
+                    kw[j] = None
+                    kw.append(paired)
+
+    intermediate = _remove_duplicates(kw)
+
+    final = intermediate.copy()
+    for i in range(len(intermediate)):
+        for j in range(len(intermediate)):
+            if i == j:
+                continue
+            capped = pair_capitalizator(intermediate[i], intermediate[j])
+            if capped is not None:
+                final[i] = None
+                final[j] = None
+                final.append(capped)
+
+    return _remove_duplicates(final)
+
+
+if __name__ == '__main__':
+    test_keywords = ['gupp(ies|happy)', 'gupp(itonia)', 'gupp(piop)']
+    result = process_keywords(test_keywords)
+    print(f'processed keywords: {result}')
