@@ -10,8 +10,6 @@
 
 <img src="ui_validate.png" width="420"/> <img src="ui_replace.png" width="420"/>
 
-*Search/Validate mode (left) — Search + Replace mode (right)*
-
 ---
 
 ## Abstract
