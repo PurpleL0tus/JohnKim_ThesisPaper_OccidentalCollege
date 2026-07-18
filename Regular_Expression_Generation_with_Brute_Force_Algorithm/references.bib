@@ -22,7 +22,7 @@
 }
 
 @article{Zheng2021,
-  author = {Li-Xiao Zheng, Shuai Ma, Zu-Xi Chen, Xiang-Yu Luo},
+  author = {Li-Xiao Zheng and Shuai Ma and Zu-Xi Chen and Xiang-Yu Luo},
   title = {Ensuring the Correctness of Regular Expressions: A Review},
   journal = {International Journal of Automation and Computing},
   volume = {18},
@@ -32,7 +32,8 @@
   month = {August},
   doi = {10.1007/s11633-021-1301-4},
 }
-@inproceedings{zouhar-etal-2023-formal,
+
+@inproceedings{zouhar2023,
     title = "A Formal Perspective on Byte-Pair Encoding",
     author = "Zouhar, Vil{\'e}m  and
       Meister, Clara  and
@@ -53,24 +54,6 @@
     doi = "10.18653/v1/2023.findings-acl.38",
     pages = "598--614",
     abstract = "Byte-Pair Encoding (BPE) is a popular algorithm used for tokenizing data in NLP, despite being devised initially as a compression method.BPE appears to be a greedy algorithm at face value, but the underlying optimization problem that BPE seeks to solve has not yet been laid down. We formalize BPE as a combinatorial optimization problem. Via submodular functions, we prove that the iterative greedy version is a 1/sigma*(1-e(-sigma))-approximation of an optimal merge sequence, where sigma is the total backward curvature with respect to the optimal merge sequence. Empirically the lower bound of the approximation is approx0.37.We provide a faster implementation of BPE which improves the runtime complexity from O(NM) to O(N log M), where N is the sequence length and M is the merge count. Finally, we optimize the brute-force algorithm for optimal BPE using memoization."
-}
-
-@inproceedings{geneticprogramming,
-author = {Bartoli, Alberto and Davanzo, Giorgio and De Lorenzo, Andrea and Mauri, Marco and Medvet, Eric and Sorio, Enrico},
-title = {Automatic generation of regular expressions from examples with genetic programming},
-year = {2012},
-isbn = {9781450311786},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-url = {https://doi.org/10.1145/2330784.2331000},
-doi = {10.1145/2330784.2331000},
-abstract = {We explore the practical feasibility of a system based on genetic programming (GP) for the automatic generation of regular expressions. The user describes the desired task by providing a set of labeled examples, in the form of text lines. The system uses these examples for driving the evolutionary search towards a regular expression suitable for the specified task. Usage of the system should require neither familiarity with GP nor with regular expressions syntax. In our GP implementation each individual represents a syntactically correct regular expression. We performed an experimental evaluation on two different extraction tasks applied to real-world datasets and obtained promising results in terms of precision and recall, even in comparison to an earlier state-of-the-art proposal.},
-booktitle = {Proceedings of the 14th Annual Conference Companion on Genetic and Evolutionary Computation},
-pages = {1477–1478},
-numpages = {2},
-keywords = {genetic programming, regular expression},
-location = {Philadelphia, Pennsylvania, USA},
-series = {GECCO '12}
 }
 
 @inproceedings{deterministic,
@@ -120,13 +103,69 @@ series = {ANCS '07}
   keywords={Computer bugs;Particle separators;Test pattern generators;Engines;Presses;Tools;regular expressions;software bug detection;testing},
   doi={10.1109/SCAM.2018.00034}}
 
-@INPROCEEDINGS{Li2009,
-  author={Li, Nuo and Xie, Tao and Tillmann, Nikolai and de Halleux, Jonathan and Schulte, Wolfram},
-  booktitle={2009 IEEE/ACM International Conference on Automated Software Engineering}, 
-  title={Reggae: Automated Test Generation for Programs Using Complex Regular Expressions}, 
-  year={2009},
-  volume={},
-  number={},
-  pages={515-519},
-  keywords={Automatic testing;Logic testing;Space exploration;Engines;Software testing;USA Councils;Manuals;Impedance matching;Software engineering;Software measurement;test generation;dynamic symbolic execution;string generation},
-  doi={10.1109/ASE.2009.67}}
+
+@inproceedings{davis2018,
+    author = {Davis, James C. and Coghlan, Christy A. and Servant, Francisco and Lee, Dongyoon},
+    title = {The Impact of Regular Expression Denial of Service (ReDoS) in Practice},
+    booktitle = {Proceedings of the 2018 26th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
+    year = {2018},
+    publisher = {Association for Computing Machinery},
+    doi = {10.1145/3236024.3236027},
+}
+
+@inproceedings{staicu2018,
+    author = {Staicu, Cristian-Alexandru and Pradel, Michael},
+    title = {Freezing the Web: A Study of {ReDoS} Vulnerabilities in {JavaScript}-based Web Servers},
+    booktitle = {27th USENIX Security Symposium},
+    year = {2018},
+    publisher = {USENIX Association},
+    url = {https://www.usenix.org/conference/usenixsecurity18/presentation/staicu},
+}
+
+@incollection{kleene1956,
+    author = {Kleene, Stephen C.},
+    title = {Representation of Events in Nerve Nets and Finite Automata},
+    booktitle = {Automata Studies},
+    editor = {Shannon, Claude E. and McCarthy, John},
+    publisher = {Princeton University Press},
+    year = {1956},
+}
+
+@article{bartoli2014,
+    author = {Bartoli, Alberto and Davanzo, Giorgio and De Lorenzo, Andrea and Medvet, Eric and Sorio, Enrico},
+    title = {Automatic Synthesis of Regular Expressions from Examples},
+    journal = {Computer},
+    volume = {47},
+    number = {12},
+    pages = {72--80},
+    year = {2014},
+    month = {December},
+    publisher = {IEEE},
+    doi = {10.1109/MC.2014.344},
+}
+
+@inproceedings{locascio2016,
+  author    = {Nicholas Locascio and Karthik Narasimhan and Eduardo DeLeon and Nate Kushman and Regina Barzilay},
+  title     = {Neural Generation of Regular Expressions from Natural Language with Minimal Domain Knowledge},
+  booktitle = {Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing},
+  year      = {2016},
+  pages     = {1918--1923},
+  publisher = {Association for Computational Linguistics}
+}
+
+@inproceedings{kushman2013,
+  author    = {Nate Kushman and Regina Barzilay},
+  title     = {Using Semantic Unification to Generate Regular Expressions from Natural Language},
+  booktitle = {Proceedings of the 2013 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies},
+  year      = {2013},
+  publisher = {Association for Computational Linguistics}
+}
+
+@misc{cox2010,
+  author    = {Russ Cox},
+  title     = {RE2: a principled approach to regular expression matching},
+  year      = {2010},
+  month     = {March},
+  howpublished = {\url{https://opensource.googleblog.com/2010/03/re2-principled-approach-to-regular.html}},
+  note      = {Google Open Source Blog}
+}
