@@ -6,6 +6,14 @@
 
 ---
 
+## User Interface
+
+<img src="ui_validate.png" width="420"/> <img src="ui_replace.png" width="420"/>
+
+*Search/Validate mode (left) — Search + Replace mode (right)*
+
+---
+
 ## Abstract
 
 Regular expressions are an irreplaceable tool in computer science. However, regular expressions are not only difficult to write correctly but also difficult to test correctly. In fact, 80% of regexes are implemented without any testing.
